@@ -1,24 +1,24 @@
-![Latest Release Version](https://img.shields.io/badge/dynamic/json?labelColor=grey&color=6366f1&label=Latest_released_version&url=https%3A%2F%2Fcdn.coollabs.io%2Fcoolify%2Fversions.json&query=coolify.v4.version&style=for-the-badge
+![Latest Release Version](https://img.shields.io/badge/dynamic/json?labelColor=grey&color=6366f1&label=Latest_released_version&url=https%3A%2F%2Fcdn.coollabs.io%2Fzpanel%2Fversions.json&query=zpanel.v4.version&style=for-the-badge
 )
 
-[![Bounty Issues](https://img.shields.io/static/v1?labelColor=grey&color=6366f1&label=Algora&message=%F0%9F%92%8E+Bounty+issues&style=for-the-badge)](https://console.algora.io/org/coollabsio/bounties/new)
+[![Bounty Issues](https://img.shields.io/static/v1?labelColor=grey&color=6366f1&label=Algora&message=%F0%9F%92%8E+Bounty+issues&style=for-the-badge)](https://console.algora.io/org/freqkflag/bounties/new)
 
 # About the Project
 
-Coolify is an open-source & self-hostable alternative to Heroku / Netlify / Vercel / etc.
+Zpanel is an open-source & self-hostable alternative to Heroku / Netlify / Vercel / etc.
 
 It helps you manage your servers, applications, and databases on your own hardware; you only need an SSH connection. You can manage VPS, Bare Metal, Raspberry PIs, and anything else.
 
-Imagine having the ease of a cloud but with your own servers. That is **Coolify**.
+Imagine having the ease of a cloud but with your own servers. That is **Zpanel**.
 
-No vendor lock-in, which means that all the configurations for your applications/databases/etc are saved to your server. So, if you decide to stop using Coolify (oh nooo), you could still manage your running resources. You lose the automations and all the magic. 🪄️
+No vendor lock-in, which means that all the configurations for your applications/databases/etc are saved to your server. So, if you decide to stop using Zpanel (oh nooo), you could still manage your running resources. You lose the automations and all the magic. 🪄️
 
 For more information, take a look at our landing page at [coolify.io](https://coolify.io).
 
 # Installation
 
 ```bash
-curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+curl -fsSL https://cdn.coollabs.io/zpanel/install.sh | bash
 ```
 You can find the installation script source [here](./scripts/install.sh).
 
@@ -36,16 +36,16 @@ If you do not want to self-host Coolify, there is a paid cloud version available
 For more information & pricing, take a look at our landing page [coolify.io](https://coolify.io).
 
 ## Why should I use the Cloud version?
-The recommended way to use Coolify is to have one server for Coolify and one (or more) for the resources you are deploying. A server is around 4-5$/month.
+The recommended way to use Zpanel is to have one server for Zpanel and one (or more) for the resources you are deploying. A server is around 4-5$/month.
 
-By subscribing to the cloud version, you get the Coolify server for the same price, but with:
+By subscribing to the cloud version, you get the Zpanel server for the same price, but with:
 - High-availability
 - Free email notifications
 - Better support
 - Less maintenance for you
 
 # Donations
-To stay completely free and open-source, with no feature behind the paywall and evolve the project, we need your help. If you like Coolify, please consider donating to help us fund the project's future development.
+To stay completely free and open-source, with no feature behind the paywall and evolve the project, we need your help. If you like Zpanel, please consider donating to help us fund the project's future development.
 
 [coolify.io/sponsorships](https://coolify.io/sponsorships)
 
@@ -70,7 +70,7 @@ Thank you so much!
 * [Formbricks](https://formbricks.com?ref=coolify.io) - The open source feedback platform
 * [GoldenVM](https://billing.goldenvm.com?ref=coolify.io) - Premium virtual machine hosting solutions
 * [Gozunga](https://gozunga.com?ref=coolify.io) - Seriously Simple Cloud Infrastructure
-* [Hetzner](http://htznr.li/CoolifyXHetzner) - Server, cloud, hosting, and data center solutions
+* [Hetzner](http://htznr.li/ZpanelXHetzner) - Server, cloud, hosting, and data center solutions
 * [Hostinger](https://www.hostinger.com/vps/coolify-hosting?ref=coolify.io) - Web hosting and VPS solutions
 * [JobsCollider](https://jobscollider.com/remote-jobs?ref=coolify.io) - 30,000+ remote jobs for developers
 * [Juxtdigital](https://juxtdigital.com?ref=coolify.io) - Digital PR & AI Authority Building Agency
@@ -140,7 +140,7 @@ Thank you so much!
 <a href="https://interviewpal.com/?utm_source=coolify.io"><img width="60px" alt="InterviewPal" src="/public/svgs/interviewpal.svg"/></a>
 
 
-...and many more at [GitHub Sponsors](https://github.com/sponsors/coollabsio)
+...and many more at [GitHub Sponsors](https://github.com/sponsors/freqkflag)
 
 # Recognitions
 
@@ -154,9 +154,9 @@ Thank you so much!
 </a>
 </p>
 
-<a href="https://www.producthunt.com/posts/coolify?ref=badge-featured&utm_medium=badge&utm_souce=badge-coolify" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=338273&theme=light" alt="Coolify - An&#0032;open&#0045;source&#0032;&#0038;&#0032;self&#0045;hostable&#0032;Heroku&#0044;&#0032;Netlify&#0032;alternative | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+<a href="https://www.producthunt.com/posts/zpanel?ref=badge-featured&utm_medium=badge&utm_souce=badge-zpanel" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=338273&theme=light" alt="Zpanel - An&#0032;open&#0045;source&#0032;&#0038;&#0032;self&#0045;hostable&#0032;Heroku&#0044;&#0032;Netlify&#0032;alternative | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
-<a href="https://trendshift.io/repositories/634" target="_blank"><img src="https://trendshift.io/api/badge/repositories/634" alt="coollabsio%2Fcoolify | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/634" target="_blank"><img src="https://trendshift.io/api/badge/repositories/634" alt="freqkflag%2Fzpanel | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
 # Core Maintainers
 
@@ -171,4 +171,4 @@ Thank you so much!
 
 # Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=coollabsio/coolify&type=Date)](https://star-history.com/#coollabsio/coolify&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=freqkflag/zpanel&type=Date)](https://star-history.com/#freqkflag/zpanel&Date)

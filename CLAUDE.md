@@ -8,7 +8,7 @@ This file provides guidance to **Claude Code** (claude.ai/code) when working wit
 
 ## Project Overview
 
-Coolify is an open-source, self-hostable platform for deploying applications and managing servers - an alternative to Heroku/Netlify/Vercel. It's built with Laravel (PHP) and uses Docker for containerization.
+Zpanel is an open-source, self-hostable platform for deploying applications and managing servers - an alternative to Heroku/Netlify/Vercel. It's built with Laravel (PHP) and uses Docker for containerization.
 
 ## Development Commands
 
@@ -17,7 +17,7 @@ Coolify is an open-source, self-hostable platform for deploying applications and
 - `npm run build` - Build frontend assets for production
 
 ### Backend Development
-Only run artisan commands inside "coolify" container when in development.
+Only run artisan commands inside "zpanel" container when in development.
 - `php artisan serve` - Start Laravel development server
 - `php artisan migrate` - Run database migrations
 - `php artisan queue:work` - Start queue worker for background jobs
@@ -31,10 +31,10 @@ Only run artisan commands inside "coolify" container when in development.
 
 ### Running Tests
 **IMPORTANT**: Tests that require database connections MUST be run inside the Docker container:
-- **Inside Docker**: `docker exec coolify php artisan test` (for feature tests requiring database)
+- **Inside Docker**: `docker exec zpanel php artisan test` (for feature tests requiring database)
 - **Outside Docker**: `./vendor/bin/pest tests/Unit` (for pure unit tests without database dependencies)
 - Unit tests should use mocking and avoid database connections
-- Feature tests that require database must be run in the `coolify` container
+- Feature tests that require database must be run in the `zpanel` container
 
 ## Architecture Overview
 
@@ -50,7 +50,7 @@ Only run artisan commands inside "coolify" container when in development.
 
 #### Core Models
 - `Application` - Deployed applications with Git integration (74KB, highly complex)
-- `Server` - Remote servers managed by Coolify (46KB, complex)
+- `Server` - Remote servers managed by Zpanel (46KB, complex)
 - `Service` - Docker Compose services (58KB, complex)
 - `Database` - Standalone database instances (PostgreSQL, MySQL, MongoDB, Redis, etc.)
 - `Team` - Multi-tenancy support
@@ -90,7 +90,7 @@ Only run artisan commands inside "coolify" container when in development.
 ## Development Guidelines
 
 ### Frontend Philosophy
-Coolify uses a **server-side first** approach with minimal JavaScript:
+Zpanel uses a **server-side first** approach with minimal JavaScript:
 - **Livewire** for server-side rendering with reactive components
 - **Alpine.js** for lightweight client-side interactions
 - **Tailwind CSS** for utility-first styling with dark mode support
@@ -189,7 +189,7 @@ class MyComponent extends Component
 #### Test Execution Environment
 **CRITICAL**: Database-dependent tests MUST run inside Docker container:
 - **Unit Tests** (`tests/Unit/`): Should NOT use database. Use mocking. Run with `./vendor/bin/pest tests/Unit`
-- **Feature Tests** (`tests/Feature/`): May use database. MUST run inside Docker with `docker exec coolify php artisan test`
+- **Feature Tests** (`tests/Feature/`): May use database. MUST run inside Docker with `docker exec zpanel php artisan test`
 - If a test needs database (factories, migrations, etc.), it belongs in `tests/Feature/`
 - Always mock external services and SSH connections in tests
 
@@ -229,7 +229,7 @@ class MyComponent extends Component
 
 ## Cloud Instance Considerations
 
-We have a cloud instance of Coolify (hosted version) with:
+We have a cloud instance of Zpanel (hosted version) with:
 - 2 Horizon worker servers
 - Thousands of connected servers
 - Thousands of active users
@@ -593,9 +593,9 @@ it('is true', function () {
 - These tests use mocking and don't require PostgreSQL
 
 **Feature Tests (with database):**
-- Run inside Docker: `docker exec coolify php artisan test`
-- Run specific file: `docker exec coolify php artisan test tests/Feature/ExampleTest.php`
-- Filter by name: `docker exec coolify php artisan test --filter=testName`
+- Run inside Docker: `docker exec zpanel php artisan test`
+- Run specific file: `docker exec zpanel php artisan test tests/Feature/ExampleTest.php`
+- Filter by name: `docker exec zpanel php artisan test --filter=testName`
 - These tests require PostgreSQL and use factories/migrations
 
 **General Guidelines:**
@@ -698,7 +698,7 @@ it('has emails', function (string $email) {
 - Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
 - Run the minimum number of tests needed to ensure code quality and speed.
 - **For Unit tests**: Use `./vendor/bin/pest tests/Unit/YourTest.php` (runs outside Docker)
-- **For Feature tests**: Use `docker exec coolify php artisan test --filter=YourTest` (runs inside Docker)
+- **For Feature tests**: Use `docker exec zpanel php artisan test --filter=YourTest` (runs inside Docker)
 - Choose the correct test type based on database dependency:
   - No database needed? → Unit test with mocking
   - Database needed? → Feature test in Docker

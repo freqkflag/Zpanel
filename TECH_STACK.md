@@ -1,4 +1,4 @@
-# Coolify Technology Stack
+# Zpanel Technology Stack
 
 ## Frontend
 
