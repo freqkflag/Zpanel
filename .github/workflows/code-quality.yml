@@ -1,0 +1,88 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [main, next, develop]
+  pull_request:
+    branches: [main, next]
+
+jobs:
+  pint:
+    name: Laravel Pint (Code Style)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, bcmath
+      
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: implementation/phase-1/Zpanel/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('implementation/phase-1/Zpanel/composer.lock') }}
+      
+      - name: Install dependencies
+        working-directory: implementation/phase-1/Zpanel
+        run: composer install --prefer-dist --no-interaction
+      
+      - name: Run Pint
+        working-directory: implementation/phase-1/Zpanel
+        run: ./vendor/bin/pint --test
+
+  phpstan:
+    name: PHPStan (Static Analysis)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, bcmath, pdo, pdo_pgsql
+      
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: implementation/phase-1/Zpanel/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('implementation/phase-1/Zpanel/composer.lock') }}
+      
+      - name: Install dependencies
+        working-directory: implementation/phase-1/Zpanel
+        run: composer install --prefer-dist --no-interaction
+      
+      - name: Run PHPStan
+        working-directory: implementation/phase-1/Zpanel
+        run: ./vendor/bin/phpstan analyse --memory-limit=2G
+
+  eslint:
+    name: ESLint (JavaScript)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: implementation/phase-1/Zpanel/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: implementation/phase-1/Zpanel
+        run: npm ci
+      
+      - name: Run ESLint
+        working-directory: implementation/phase-1/Zpanel
+        run: npm run lint || echo "ESLint not configured yet"
+

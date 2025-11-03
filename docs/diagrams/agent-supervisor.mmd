@@ -1,0 +1,107 @@
+graph TB
+    subgraph "HTTP API Layer"
+        API[Supervisor HTTP API<br/>Express :3001]
+        Endpoints["/health<br/>/registry<br/>/run-agent<br/>/agents/status"]
+    end
+
+    subgraph "Supervisor Core"
+        Monitor[Agent Monitor<br/>Lifecycle Management]
+        Registry[Agent Registry<br/>8 Agents]
+        IPC[IPC Protocol<br/>Process Messages]
+    end
+
+    subgraph "Agent Workers"
+        direction TB
+        Example[Example Task<br/>Demo Agent]
+        Health[Health Checker<br/>CPU/Memory/Disk]
+        Log[Log Analyzer<br/>Parse/Stats/Errors]
+        APICaller[API Caller<br/>HTTP Requests]
+        File[File Processor<br/>Copy/Move/Organize]
+        Data[Data Transformer<br/>JSON/CSV/XML]
+        Backup[Backup Manager<br/>Create/Restore]
+        Image[Image Optimizer<br/>Compress/Convert]
+    end
+
+    subgraph "Execution Environment"
+        Fork[Fork Process<br/>Node.js Child]
+        Docker[Docker Container<br/>Sandboxed]
+    end
+
+    subgraph "Monitoring & Logging"
+        Logs[actions.log<br/>Structured Logging]
+        Metrics[Runtime Metrics<br/>CPU/Memory/Progress]
+    end
+
+    subgraph "Configuration"
+        ManifestJSON[manifest.json<br/>MCP Definition]
+        RegistryJSON[registry.json<br/>Agent Catalog]
+        ConfigJSON[config.json<br/>Per-Agent Config]
+    end
+
+    %% API Flow
+    API --> Endpoints
+    Endpoints --> Monitor
+
+    %% Supervisor Core
+    Monitor --> Registry
+    Monitor --> IPC
+    Registry -.loads.-> RegistryJSON
+    Registry -.loads.-> ManifestJSON
+
+    %% Agent Spawning
+    Monitor -->|Spawn| Fork
+    Monitor -->|Spawn| Docker
+    Fork --> Example
+    Fork --> Health
+    Fork --> Log
+    Fork --> APICaller
+    Fork --> File
+    Fork --> Data
+    Fork --> Backup
+    Fork --> Image
+
+    %% Agent Communication
+    Example -->|IPC Messages| IPC
+    Health -->|IPC Messages| IPC
+    Log -->|IPC Messages| IPC
+    APICaller -->|IPC Messages| IPC
+    File -->|IPC Messages| IPC
+    Data -->|IPC Messages| IPC
+    Backup -->|IPC Messages| IPC
+    Image -->|IPC Messages| IPC
+
+    %% Configuration
+    Example -.reads.-> ConfigJSON
+    Health -.reads.-> ConfigJSON
+    Log -.reads.-> ConfigJSON
+
+    %% Monitoring
+    Monitor --> Logs
+    Monitor --> Metrics
+    IPC --> Logs
+
+    %% Agent Capabilities
+    Health -->|System Metrics| Metrics
+    Log -->|Log Analysis| Logs
+    APICaller -.->|External APIs| Internet[External APIs]
+    File -.->|Filesystem| FS[File System]
+    Backup -.->|Filesystem| FS
+    Image -.->|Filesystem| FS
+
+    %% Styling
+    classDef apiClass fill:#4A90E2,stroke:#2E5C8A,color:#fff
+    classDef coreClass fill:#50C878,stroke:#2E7D4E,color:#fff
+    classDef agentClass fill:#1ABC9C,stroke:#117A65,color:#fff
+    classDef execClass fill:#FFB84D,stroke:#CC8A3D,color:#000
+    classDef monitorClass fill:#E74C3C,stroke:#A53426,color:#fff
+    classDef configClass fill:#9B59B6,stroke:#6B3E82,color:#fff
+    classDef externalClass fill:#95A5A6,stroke:#5F6A6A,color:#fff
+
+    class API,Endpoints apiClass
+    class Monitor,Registry,IPC coreClass
+    class Example,Health,Log,APICaller,File,Data,Backup,Image agentClass
+    class Fork,Docker execClass
+    class Logs,Metrics monitorClass
+    class ManifestJSON,RegistryJSON,ConfigJSON configClass
+    class Internet,FS externalClass
+

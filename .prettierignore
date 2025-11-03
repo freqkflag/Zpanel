@@ -1,0 +1,24 @@
+# Dependencies
+node_modules
+vendor
+
+# Build outputs
+implementation/phase-1/Zpanel/public/build
+implementation/phase-1/Zpanel/public/hot
+implementation/phase-1/Zpanel/storage
+
+# Cache
+implementation/phase-1/Zpanel/bootstrap/cache
+.phpunit.result.cache
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.*
+
+# Generated files
+implementation/phase-1/Zpanel/composer.lock
+implementation/phase-1/Zpanel/package-lock.json
+

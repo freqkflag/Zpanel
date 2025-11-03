@@ -1,0 +1,82 @@
+graph LR
+    subgraph "Client Layer"
+        Cursor[Cursor IDE]
+        CLI[Command Line]
+        WebUI[Web Interface]
+    end
+
+    subgraph "MCP Server Framework"
+        LaravelBoost[Laravel Boost<br/>MCP Server]
+        Registry[Server Registry<br/>Health Monitoring]
+        
+        subgraph "MCP Servers"
+            CloudflareMCP[Cloudflare MCP<br/>DNS/Tunnels]
+            GitHubMCP[GitHub MCP<br/>Repos/Actions]
+            DatabaseMCP[Database MCP<br/>Query/Manage]
+            DockerMCP[Docker MCP<br/>Container Ops]
+            CustomMCP[Custom MCP<br/>User Defined]
+        end
+    end
+
+    subgraph "Service Integration"
+        CloudflareService[Cloudflare Service<br/>API Client]
+        DNSService[DNS Service<br/>Record Management]
+        TunnelService[Tunnel Service<br/>Cloudflared]
+        KongService[Kong Service<br/>API Gateway]
+    end
+
+    subgraph "Data Storage"
+        MCPServersDB[(mcp_servers table<br/>Server Config)]
+        ApplicationDB[(applications table<br/>App Data)]
+    end
+
+    subgraph "External APIs"
+        CloudflareAPI[Cloudflare API]
+        GitHubAPI[GitHub API]
+        DockerAPI[Docker Engine API]
+    end
+
+    %% Client to MCP
+    Cursor -.->|stdio| LaravelBoost
+    CLI -.->|HTTP| LaravelBoost
+    WebUI -->|UI| Registry
+
+    %% MCP Framework
+    LaravelBoost --> Registry
+    Registry --> CloudflareMCP
+    Registry --> GitHubMCP
+    Registry --> DatabaseMCP
+    Registry --> DockerMCP
+    Registry --> CustomMCP
+
+    %% MCP to Services
+    CloudflareMCP --> CloudflareService
+    CloudflareMCP --> DNSService
+    CloudflareMCP --> TunnelService
+    GitHubMCP -.-> GitHubAPI
+    DockerMCP -.-> DockerAPI
+
+    %% Services to External
+    CloudflareService --> CloudflareAPI
+    DNSService --> CloudflareAPI
+    TunnelService --> CloudflareAPI
+    KongService -.-> DockerAPI
+
+    %% Data persistence
+    Registry --> MCPServersDB
+    CloudflareMCP --> MCPServersDB
+    CloudflareService --> ApplicationDB
+
+    %% Styling
+    classDef clientClass fill:#4A90E2,stroke:#2E5C8A,color:#fff
+    classDef mcpClass fill:#50C878,stroke:#2E7D4E,color:#fff
+    classDef serviceClass fill:#FFB84D,stroke:#CC8A3D,color:#000
+    classDef dataClass fill:#E74C3C,stroke:#A53426,color:#fff
+    classDef externalClass fill:#95A5A6,stroke:#5F6A6A,color:#fff
+
+    class Cursor,CLI,WebUI clientClass
+    class LaravelBoost,Registry,CloudflareMCP,GitHubMCP,DatabaseMCP,DockerMCP,CustomMCP mcpClass
+    class CloudflareService,DNSService,TunnelService,KongService serviceClass
+    class MCPServersDB,ApplicationDB dataClass
+    class CloudflareAPI,GitHubAPI,DockerAPI externalClass
+

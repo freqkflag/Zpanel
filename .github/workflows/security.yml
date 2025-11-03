@@ -1,0 +1,82 @@
+name: Security Checks
+
+on:
+  push:
+    branches: [main, next]
+  pull_request:
+    branches: [main, next]
+  schedule:
+    # Run security checks weekly
+    - cron: '0 0 * * 0'
+
+jobs:
+  dependency-check:
+    name: Dependency Security Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run Composer Audit
+        working-directory: implementation/phase-1/Zpanel
+        run: |
+          composer install --no-dev
+          composer audit
+      
+      - name: Run npm Audit
+        working-directory: implementation/phase-1/Zpanel
+        run: |
+          npm ci
+          npm audit --audit-level=moderate
+
+  secrets-scan:
+    name: Secrets Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: TruffleHog Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+
+  sast:
+    name: Static Application Security Testing
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+      
+      - name: Install dependencies
+        working-directory: implementation/phase-1/Zpanel
+        run: composer install --no-interaction
+      
+      - name: Run security analysis
+        working-directory: implementation/phase-1/Zpanel
+        run: |
+          # Run PHPStan with security focus
+          ./vendor/bin/phpstan analyse --configuration=phpstan-security.neon || true
+          
+          # Check for known security issues
+          composer audit --format=json > security-report.json || true
+      
+      - name: Upload security report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: security-report
+          path: implementation/phase-1/Zpanel/security-report.json
+

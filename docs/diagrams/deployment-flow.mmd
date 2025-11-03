@@ -1,0 +1,60 @@
+sequenceDiagram
+    participant Dev as Developer
+    participant Git as Git Repository
+    participant Webhook as Git Webhook
+    participant Zpanel as Zpanel
+    participant Queue as Redis Queue
+    participant Docker as Docker Engine
+    participant Proxy as Kong/Traefik
+    participant App as Application
+
+    Dev->>Git: git push origin main
+    Git->>Webhook: Trigger push event
+    Webhook->>Zpanel: POST /webhooks/deploy
+    
+    activate Zpanel
+    Zpanel->>Zpanel: Validate webhook signature
+    Zpanel->>Queue: Dispatch DeploymentJob
+    Zpanel-->>Webhook: 200 OK (Deployment queued)
+    deactivate Zpanel
+
+    activate Queue
+    Queue->>Zpanel: Process DeploymentJob
+    deactivate Queue
+
+    activate Zpanel
+    Zpanel->>Git: Clone repository
+    Git-->>Zpanel: Source code
+    
+    Zpanel->>Zpanel: Generate Dockerfile/Config
+    Zpanel->>Docker: docker build (with cache)
+    
+    activate Docker
+    Docker->>Docker: Build image layers
+    Docker->>Docker: Use BuildKit cache
+    Docker-->>Zpanel: Image built: app:latest
+    deactivate Docker
+
+    Zpanel->>Docker: docker push to registry
+    Zpanel->>Docker: docker pull on target server
+    Zpanel->>Docker: docker run with config
+    
+    activate Docker
+    Docker->>App: Start container
+    App->>App: Health check
+    App-->>Docker: Container healthy
+    deactivate Docker
+
+    Zpanel->>Proxy: Update routing config
+    activate Proxy
+    Proxy->>Proxy: Reload configuration
+    Proxy-->>Zpanel: Routes updated
+    deactivate Proxy
+
+    Zpanel->>Dev: Send deployment notification
+    Zpanel-->>Queue: Mark deployment complete
+    deactivate Zpanel
+
+    Dev->>App: Access application
+    App-->>Dev: Application response
+

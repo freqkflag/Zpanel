@@ -1,0 +1,21 @@
+[Unit]
+Description=Coolify Lint Agent - Automatic linting on file save
+After=network.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=/root/Zpanel
+ExecStart=/usr/bin/node /root/Zpanel/lint-agent.js
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Environment
+Environment=NODE_ENV=development
+Environment=PATH=/usr/bin:/usr/local/bin
+
+[Install]
+WantedBy=multi-user.target
+

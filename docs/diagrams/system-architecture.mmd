@@ -1,0 +1,113 @@
+graph TB
+    subgraph "User Layer"
+        User[User/Developer]
+        Browser[Web Browser]
+        CLI[CLI/API Client]
+    end
+
+    subgraph "Application Layer - Zpanel Control Panel"
+        WebUI[Web UI<br/>Livewire + Alpine.js]
+        API[REST API<br/>Laravel Sanctum]
+        IDE[Integrated IDE<br/>code-server]
+        MCP[MCP Server<br/>Laravel Boost]
+    end
+
+    subgraph "Service Layer"
+        IDEService[IDE Service<br/>Token Auth]
+        MCPRegistry[MCP Server Registry<br/>Health Checks]
+        CloudflareAPI[Cloudflare Service<br/>DNS/Tunnels]
+        KongGW[Kong Gateway<br/>API Management]
+    end
+
+    subgraph "Infrastructure Services"
+        direction LR
+        Kong[Kong Gateway<br/>Port 8000/8001]
+        CodeServer[code-server<br/>Port 8080]
+        Soketi[Soketi WebSocket<br/>Port 6001]
+    end
+
+    subgraph "Data Layer"
+        Postgres[(PostgreSQL 15<br/>Primary DB)]
+        Redis[(Redis 7<br/>Cache/Queue)]
+        Storage[File Storage<br/>Backups/Volumes]
+    end
+
+    subgraph "External Integrations"
+        Cloudflare[Cloudflare API<br/>DNS/Tunnels/SSL]
+        GitHub[GitHub<br/>OAuth/Repos]
+        Docker[Docker Registry<br/>Images]
+    end
+
+    subgraph "Agent Supervisor System"
+        AgentAPI[Supervisor API<br/>Port 3001]
+        HealthAgent[Health Checker]
+        LogAgent[Log Analyzer]
+        FileAgent[File Processor]
+        BackupAgent[Backup Manager]
+        DataAgent[Data Transformer]
+        APIAgent[API Caller]
+        ImageAgent[Image Optimizer]
+    end
+
+    %% User connections
+    User --> Browser
+    User --> CLI
+    Browser --> WebUI
+    Browser --> IDE
+    CLI --> API
+
+    %% Application to Services
+    WebUI --> IDEService
+    WebUI --> MCPRegistry
+    WebUI --> CloudflareAPI
+    WebUI --> KongGW
+    API --> MCPRegistry
+    API --> CloudflareAPI
+    API --> KongGW
+
+    %% Service to Infrastructure
+    IDEService --> CodeServer
+    MCPRegistry --> MCP
+    KongGW --> Kong
+    WebUI --> Soketi
+
+    %% Data Layer connections
+    WebUI --> Postgres
+    API --> Postgres
+    IDEService --> Redis
+    MCPRegistry --> Postgres
+    CloudflareAPI --> Postgres
+    KongGW --> Postgres
+
+    %% External integrations
+    CloudflareAPI --> Cloudflare
+    MCPRegistry --> GitHub
+    KongGW --> Docker
+
+    %% Agent Supervisor
+    WebUI -.-> AgentAPI
+    AgentAPI --> HealthAgent
+    AgentAPI --> LogAgent
+    AgentAPI --> FileAgent
+    AgentAPI --> BackupAgent
+    AgentAPI --> DataAgent
+    AgentAPI --> APIAgent
+    AgentAPI --> ImageAgent
+
+    %% Styling
+    classDef userClass fill:#4A90E2,stroke:#2E5C8A,color:#fff
+    classDef appClass fill:#50C878,stroke:#2E7D4E,color:#fff
+    classDef serviceClass fill:#FFB84D,stroke:#CC8A3D,color:#000
+    classDef infraClass fill:#9B59B6,stroke:#6B3E82,color:#fff
+    classDef dataClass fill:#E74C3C,stroke:#A53426,color:#fff
+    classDef externalClass fill:#95A5A6,stroke:#5F6A6A,color:#fff
+    classDef agentClass fill:#1ABC9C,stroke:#117A65,color:#fff
+
+    class User,Browser,CLI userClass
+    class WebUI,API,IDE,MCP appClass
+    class IDEService,MCPRegistry,CloudflareAPI,KongGW serviceClass
+    class Kong,CodeServer,Soketi infraClass
+    class Postgres,Redis,Storage dataClass
+    class Cloudflare,GitHub,Docker externalClass
+    class AgentAPI,HealthAgent,LogAgent,FileAgent,BackupAgent,DataAgent,APIAgent,ImageAgent agentClass
+

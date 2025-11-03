@@ -1,0 +1,141 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, next, develop]
+  pull_request:
+    branches: [main, next]
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, bcmath, pdo, pdo_pgsql, redis
+          coverage: xdebug
+      
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      
+      - name: Install dependencies
+        working-directory: implementation/phase-1/Zpanel
+        run: composer install --prefer-dist --no-interaction --no-progress
+      
+      - name: Run unit tests
+        working-directory: implementation/phase-1/Zpanel
+        run: ./vendor/bin/pest tests/Unit --coverage --min=70
+
+  feature-tests:
+    name: Feature Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: coolify_test
+          POSTGRES_USER: coolify
+          POSTGRES_PASSWORD: password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, bcmath, pdo, pdo_pgsql, redis
+          coverage: xdebug
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: implementation/phase-1/Zpanel/package-lock.json
+      
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: implementation/phase-1/Zpanel/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('implementation/phase-1/Zpanel/composer.lock') }}
+      
+      - name: Install PHP dependencies
+        working-directory: implementation/phase-1/Zpanel
+        run: composer install --prefer-dist --no-interaction
+      
+      - name: Install Node dependencies
+        working-directory: implementation/phase-1/Zpanel
+        run: npm ci
+      
+      - name: Build frontend assets
+        working-directory: implementation/phase-1/Zpanel
+        run: npm run build
+      
+      - name: Setup environment
+        working-directory: implementation/phase-1/Zpanel
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+      
+      - name: Run migrations
+        working-directory: implementation/phase-1/Zpanel
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_DATABASE: coolify_test
+          DB_USERNAME: coolify
+          DB_PASSWORD: password
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+        run: php artisan migrate --force
+      
+      - name: Run feature tests
+        working-directory: implementation/phase-1/Zpanel
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_DATABASE: coolify_test
+          DB_USERNAME: coolify
+          DB_PASSWORD: password
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+        run: php artisan test --coverage --min=60
+

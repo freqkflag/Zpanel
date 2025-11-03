@@ -1,0 +1,32 @@
+{
+  "name": "zpanel-lint-agent",
+  "version": "1.0.0",
+  "description": "Automatic linting agent for Coolify/Zpanel that runs on file save",
+  "main": "lint-agent.js",
+  "scripts": {
+    "lint:watch": "node lint-agent.js",
+    "lint:install": "npm install && cd implementation/phase-1/Zpanel && npm install && composer install",
+    "setup": "npm run lint:install"
+  },
+  "keywords": [
+    "linting",
+    "file-watcher",
+    "laravel",
+    "coolify",
+    "php",
+    "javascript"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "chokidar": "^4.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+

@@ -1,0 +1,82 @@
+{
+  "name": "Zpanel Development",
+  "dockerComposeFile": "../implementation/phase-1/Zpanel/docker-compose.dev.yml",
+  "service": "app",
+  "workspaceFolder": "/var/www/html",
+  
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "MehediDracula.php-namespace-resolver",
+        "amirraminfar.laravel-extra-intellisense",
+        "ryannaddy.laravel-artisan",
+        "onecentlin.laravel-blade",
+        "open-southeners.laravel-pint",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "naoray.laravel-goto-components",
+        "austenc.livewire-docs",
+        "cierra.livewire-vscode"
+      ],
+      "settings": {
+        "php.suggest.basic": false,
+        "intelephense.telemetry.enabled": false,
+        "[php]": {
+          "editor.defaultFormatter": "open-southeners.laravel-pint",
+          "editor.formatOnSave": true
+        },
+        "[javascript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode",
+          "editor.formatOnSave": true
+        },
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": true
+        },
+        "tailwindCSS.experimental.classRegex": [
+          ["class(?:Name)?\\s*=\\s*['\"]([^'\"]*)['\"]"]
+        ]
+      }
+    }
+  },
+  
+  "forwardPorts": [
+    8000,
+    5432,
+    6379,
+    8080,
+    8025
+  ],
+  
+  "portsAttributes": {
+    "8000": {
+      "label": "Laravel Application",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL"
+    },
+    "6379": {
+      "label": "Redis"
+    },
+    "8080": {
+      "label": "code-server"
+    },
+    "8025": {
+      "label": "Mailpit"
+    }
+  },
+  
+  "postCreateCommand": "composer install && npm install",
+  
+  "postStartCommand": "php artisan migrate",
+  
+  "remoteUser": "sail",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  }
+}
+
