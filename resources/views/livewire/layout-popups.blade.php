@@ -96,7 +96,7 @@
                             <img src="{{ asset('heart.png') }}" class="w-20 h-20">
                         </div>
                         <div class="flex flex-col gap-2 lg:px-10 px-1">
-                            <div class="lg:text-xl text-md dark:text-white font-bold">Love Coolify? Support our work.
+                            <div class="lg:text-xl text-md dark:text-white font-bold">Love Zpanel? Support our work.
                             </div>
                             <div class="lg:text-sm text-xs dark:text-white">
                                 We are already profitable thanks to <span class="font-bold text-pink-500">YOU</span>
@@ -112,11 +112,11 @@
                         </div>
                         <div class="flex flex-col gap-2 text-center md:mx-auto lg:py-0 pt-2">
                             <x-forms.button isHighlighted class="md:w-36 w-full"><a target="_blank"
-                                    href="https://github.com/sponsors/coollabsio"
+                                    href="https://github.com/sponsors/freqkflag"
                                     class="font-bold dark:text-white">GitHub
                                     Sponsors</a></x-forms.button>
                             <x-forms.button isHighlighted class="md:w-36 w-full"><a target="_blank"
-                                    href="https://opencollective.com/coollabsio/donate?interval=month&amount=10&name=&legalName=&email="
+                                    href="https://opencollective.com/freqkflag/donate?interval=month&amount=10&name=&legalName=&email="
                                     class="font-bold dark:text-white">Open
                                     Collective</a></x-forms.button>
                             <x-forms.button isHighlighted class="md:w-36 w-full"><a

@@ -110,7 +110,7 @@
                         .then(response => {
                             if (response.ok) {
                                 this.currentStatus =
-                                    'Coolify is back online. Reloading this page (you can manually reload if its not done automatically)...';
+                                    'Zpanel is back online. Reloading this page (you can manually reload if its not done automatically)...';
                                 if (checkHealthInterval) clearInterval(
                                     checkHealthInterval);
                                 setTimeout(() => {
@@ -118,14 +118,14 @@
                                 }, 5000)
                             } else {
                                 this.currentStatus =
-                                    "Waiting for Coolify to come back from the dead..."
+                                    "Waiting for Zpanel to come back from the dead..."
                             }
                         })
                 }, 2000);
             },
             upgrade() {
                 if (checkIfIamDeadInterval || this.$wire.showProgress) return true;
-                this.currentStatus = 'Pulling new images and updating Coolify.';
+                this.currentStatus = 'Pulling new images and updating Zpanel.';
                 checkIfIamDeadInterval = setInterval(() => {
                     fetch('/api/health')
                         .then(response => {
@@ -133,7 +133,7 @@
                                 this.currentStatus = "Waiting for the update process..."
                             } else {
                                 this.currentStatus =
-                                    "Update done, restarting Coolify & waiting until it is revived!"
+                                    "Update done, restarting Zpanel & waiting until it is revived!"
                                 if (checkIfIamDeadInterval) clearInterval(
                                     checkIfIamDeadInterval);
                                 this.revive();

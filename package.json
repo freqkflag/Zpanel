@@ -1,5 +1,6 @@
 {
-    "name": "coolify",
+    "name": "zpanel",
+    "description": "Self-hosted control panel with AI integration (Based on Coolify)",
     "private": true,
     "type": "module",
     "scripts": {
