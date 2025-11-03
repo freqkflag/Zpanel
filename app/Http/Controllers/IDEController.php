@@ -40,9 +40,9 @@ class IDEController extends Controller
     public function workspaces()
     {
         $user = Auth::user();
+        $workspaces = $user->workspaces()->with('project')->get();
 
-        // TODO: Implement workspace listing
-        return response()->json([]);
+        return response()->json($workspaces);
     }
 
     /**
@@ -51,9 +51,25 @@ class IDEController extends Controller
     public function createWorkspace(Request $request)
     {
         $user = Auth::user();
-        $workspaceName = $request->input('name');
 
-        // TODO: Implement workspace creation
-        return response()->json(['message' => 'Workspace created']);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'string|in:default,project',
+            'project_id' => 'nullable|exists:projects,id',
+        ]);
+
+        $workspacePath = $this->ideService->getWorkspacePath($user->id, $validated['project_id'] ?? null);
+
+        $workspace = $user->workspaces()->create([
+            'name' => $validated['name'],
+            'path' => $workspacePath,
+            'type' => $validated['type'] ?? 'default',
+            'project_id' => $validated['project_id'] ?? null,
+        ]);
+
+        return response()->json([
+            'message' => 'Workspace created successfully',
+            'workspace' => $workspace,
+        ], 201);
     }
 }

@@ -91,7 +91,8 @@ class User extends Authenticatable implements SendsEmail
         });
 
         static::deleting(function (User $user) {
-            \DB::transaction(function () use ($user) {
+            // Use the DB facade with a proper import
+            \Illuminate\Support\Facades\DB::transaction(function () use ($user) {
                 $teams = $user->teams;
                 foreach ($teams as $team) {
                     $user_alone_in_team = $team->members->count() === 1;
@@ -218,6 +219,11 @@ class User extends Authenticatable implements SendsEmail
     public function teams()
     {
         return $this->belongsToMany(Team::class)->withPivot('role');
+    }
+
+    public function workspaces()
+    {
+        return $this->hasMany(Workspace::class);
     }
 
     public function changelogReads()

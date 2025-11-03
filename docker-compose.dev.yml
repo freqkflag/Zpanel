@@ -139,6 +139,67 @@ services:
       timeout: 10s
       retries: 3
 
+  kong-database:
+    image: postgres:15-alpine
+    pull_policy: always
+    container_name: coolify-kong-database
+    environment:
+      POSTGRES_USER: kong
+      POSTGRES_PASSWORD: kong
+      POSTGRES_DB: kong
+    volumes:
+      - dev_kong_postgres_data:/var/lib/postgresql/data
+    networks:
+      - coolify
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "kong"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  kong-migrations:
+    image: kong:latest
+    pull_policy: always
+    command: kong migrations bootstrap
+    depends_on:
+      - kong-database
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-database
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: kong
+      KONG_PG_DATABASE: kong
+    networks:
+      - coolify
+  kong:
+    image: kong:latest
+    pull_policy: always
+    container_name: coolify-kong
+    depends_on:
+      - kong-database
+      - kong-migrations
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-database
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: kong
+      KONG_PG_DATABASE: kong
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      KONG_ADMIN_GUI_URL: "http://localhost:8002"
+    ports:
+      - "${KONG_PROXY_PORT:-8000}:8000"
+      - "${KONG_ADMIN_PORT:-8001}:8001"
+    networks:
+      - coolify
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
 volumes:
   dev_backups_data:
   dev_postgres_data:
@@ -147,6 +208,7 @@ volumes:
   dev_minio_data:
   dev_ide_workspaces:
   dev_code_server_config:
+  dev_kong_postgres_data:
 
 networks:
   coolify:
