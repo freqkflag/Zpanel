@@ -150,6 +150,16 @@ class APIGatewayController extends Controller
     }
 
     /**
+     * Show analytics for a service
+     */
+    public function analytics(APIService $apiService)
+    {
+        return view('api-gateway.analytics', [
+            'service' => $apiService,
+        ]);
+    }
+
+    /**
      * Check Kong health
      */
     public function health()

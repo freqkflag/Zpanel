@@ -170,6 +170,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{apiService}/edit', [App\Http\Controllers\APIGatewayController::class, 'edit'])->name('edit');
         Route::patch('/{apiService}', [App\Http\Controllers\APIGatewayController::class, 'update'])->name('update');
         Route::delete('/{apiService}', [App\Http\Controllers\APIGatewayController::class, 'destroy'])->name('destroy');
+        Route::get('/{apiService}/analytics', [App\Http\Controllers\APIGatewayController::class, 'analytics'])->name('analytics');
         Route::get('/health', [App\Http\Controllers\APIGatewayController::class, 'health'])->name('health');
     });
 

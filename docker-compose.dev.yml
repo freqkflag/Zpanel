@@ -25,7 +25,7 @@ services:
     image: postgres:15-alpine
     pull_policy: always
     ports:
-      - "${FORWARD_DB_PORT:-5432}:5432"
+      - "${FORWARD_DB_PORT:-5433}:5432"
     env_file:
       - .env
     environment:
@@ -45,11 +45,11 @@ services:
     volumes:
       - dev_redis_data:/data
   soketi:
-    image: coolify-realtime:dev
+    image: zpanel-realtime:dev
     pull_policy: never
     build:
       context: .
-      dockerfile: ./docker/coolify-realtime/Dockerfile
+      dockerfile: ./docker/zpanel-realtime/Dockerfile
     env_file:
       - .env
     ports:
@@ -57,7 +57,7 @@ services:
       - "6002:6002"
     volumes:
       - ./storage:/var/www/html/storage
-      - ./docker/coolify-realtime/terminal-server.js:/terminal/terminal-server.js
+      - ./docker/zpanel-realtime/terminal-server.js:/terminal/terminal-server.js
     environment:
       SOKETI_DEBUG: "false"
       SOKETI_DEFAULT_APP_ID: "${PUSHER_APP_ID:-coolify}"
@@ -78,7 +78,7 @@ services:
       - .:/var/www/html/:cached
     command: sh -c "npm install && npm run dev"
     networks:
-      - coolify
+      - zpanel
   testing-host:
     image: zpanel-testing-host:dev
     pull_policy: never
@@ -89,13 +89,13 @@ services:
     container_name: zpanel-testing-host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - dev_coolify_data:/data/coolify
-      - dev_backups_data:/data/coolify/backups
-      - dev_postgres_data:/data/coolify/_volumes/database
-      - dev_redis_data:/data/coolify/_volumes/redis
-      - dev_minio_data:/data/coolify/_volumes/minio
+      - dev_zpanel_data:/data/zpanel
+      - dev_backups_data:/data/zpanel/backups
+      - dev_postgres_data:/data/zpanel/_volumes/database
+      - dev_redis_data:/data/zpanel/_volumes/redis
+      - dev_minio_data:/data/zpanel/_volumes/minio
     networks:
-      - coolify
+      - zpanel
   mailpit:
     image: axllent/mailpit:latest
     pull_policy: always
@@ -104,7 +104,7 @@ services:
       - "${FORWARD_MAILPIT_PORT:-1025}:1025"
       - "${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025"
     networks:
-      - coolify
+      - zpanel
   minio:
     image: ghcr.io/coollabsio/minio:RELEASE.2025-10-15T17-29-55Z # Released on 15 October 2025
     pull_policy: always
@@ -119,11 +119,12 @@ services:
     volumes:
       - dev_minio_data:/data
     networks:
-      - coolify
+      - zpanel
   code-server:
     image: codercom/code-server:latest
     pull_policy: always
     container_name: zpanel-code-server
+    user: "1000:1000"
     ports:
       - "${CODE_SERVER_PORT:-8080}:8080"
     volumes:
@@ -133,7 +134,7 @@ services:
       - PASSWORD=${CODE_SERVER_PASSWORD:-}
       - PROXY_DOMAIN=${CODE_SERVER_DOMAIN:-}
     networks:
-      - coolify
+      - zpanel
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
@@ -152,7 +153,7 @@ services:
     volumes:
       - dev_kong_postgres_data:/var/lib/postgresql/data
     networks:
-      - coolify
+      - zpanel
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "kong"]
       interval: 30s
@@ -171,7 +172,7 @@ services:
       KONG_PG_PASSWORD: kong
       KONG_PG_DATABASE: kong
     networks:
-      - coolify
+      - zpanel
   kong:
     image: kong:latest
     pull_policy: always
@@ -192,10 +193,10 @@ services:
       KONG_ADMIN_LISTEN: "0.0.0.0:8001"
       KONG_ADMIN_GUI_URL: "http://localhost:8002"
     ports:
-      - "${KONG_PROXY_PORT:-8000}:8000"
-      - "${KONG_ADMIN_PORT:-8001}:8001"
+      - "${KONG_PROXY_PORT:-8002}:8000"
+      - "${KONG_ADMIN_PORT:-8003}:8001"
     networks:
-      - coolify
+      - zpanel
     healthcheck:
       test: ["CMD", "kong", "health"]
       interval: 30s
@@ -206,13 +207,13 @@ volumes:
   dev_backups_data:
   dev_postgres_data:
   dev_redis_data:
-  dev_coolify_data:
+  dev_zpanel_data:
   dev_minio_data:
   dev_ide_workspaces:
   dev_code_server_config:
   dev_kong_postgres_data:
 
 networks:
-  coolify:
+  zpanel:
     name: zpanel-dev
     external: false
