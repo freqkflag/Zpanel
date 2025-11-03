@@ -1,14 +1,18 @@
 {
-    "name": "coollabsio/coolify",
-    "description": "The Coolify project.",
+    "name": "freqkflag/zpanel",
+    "description": "Zpanel - Self-hosted control panel with AI integration, IDE, and advanced automation (Based on Coolify).",
     "license": "Apache-2.0",
     "type": "project",
     "keywords": [
-        "coolify",
+        "zpanel",
+        "control-panel",
+        "self-hosted",
         "deployment",
         "docker",
-        "self-hosted",
-        "server"
+        "ai-integration",
+        "mcp-server",
+        "cloudflare",
+        "ide"
     ],
     "require": {
         "php": "^8.4",

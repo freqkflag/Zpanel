@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot:title>
-        MCP Servers | Coolify
+        MCP Servers | Zpanel
     </x-slot>
     <div class="flex items-center gap-2">
         <h1>MCP Servers</h1>

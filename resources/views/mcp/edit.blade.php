@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot:title>
-        Edit MCP Server | Coolify
+        Edit MCP Server | Zpanel
     </x-slot>
     <h1>Edit MCP Server</h1>
     <div class="subtitle">Update MCP server configuration.</div>

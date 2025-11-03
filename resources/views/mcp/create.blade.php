@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot:title>
-        Create MCP Server | Coolify
+        Create MCP Server | Zpanel
     </x-slot>
     <h1>Create MCP Server</h1>
     <div class="subtitle">Register a new Model Context Protocol server.</div>

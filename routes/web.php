@@ -163,6 +163,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/config', [App\Http\Controllers\MCPServerController::class, 'config'])->name('config');
     });
 
+    Route::prefix('api-gateway')->name('api-gateway.')->group(function () {
+        Route::get('/', [App\Http\Controllers\APIGatewayController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\APIGatewayController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\APIGatewayController::class, 'store'])->name('store');
+        Route::get('/{apiService}/edit', [App\Http\Controllers\APIGatewayController::class, 'edit'])->name('edit');
+        Route::patch('/{apiService}', [App\Http\Controllers\APIGatewayController::class, 'update'])->name('update');
+        Route::delete('/{apiService}', [App\Http\Controllers\APIGatewayController::class, 'destroy'])->name('destroy');
+        Route::get('/health', [App\Http\Controllers\APIGatewayController::class, 'health'])->name('health');
+    });
+
     Route::prefix('team')->group(function () {
         Route::get('/', TeamIndex::class)->name('team.index');
         Route::get('/members', TeamMemberIndex::class)->name('team.member.index');
