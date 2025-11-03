@@ -1,6 +1,6 @@
 <div>
     <x-slot:title>
-        Advanced Settings | Coolify
+        Advanced Settings | Zpanel
         </x-slot>
         <x-settings.navbar />
         <div x-data="{ activeTab: window.location.hash ? window.location.hash.substring(1) : 'general' }"
@@ -13,7 +13,7 @@
                         Save
                     </x-forms.button>
                 </div>
-                <div class="pb-4">Advanced settings for your Coolify instance.</div>
+                <div class="pb-4">Advanced settings for your Zpanel instance.</div>
 
                 <div class="flex flex-col gap-1">
                     <div class="md:w-96">
@@ -23,13 +23,13 @@
                     </div>
                     <div class="md:w-96">
                         <x-forms.checkbox instantSave id="do_not_track"
-                            helper="If enabled, Coolify will not track any data. This is useful if you are concerned about privacy."
+                            helper="If enabled, Zpanel will not track any data. This is useful if you are concerned about privacy."
                             label="Do Not Track" />
                     </div>
                     <h4 class="pt-4">DNS Settings</h4>
                     <div class="md:w-96">
                         <x-forms.checkbox instantSave id="is_dns_validation_enabled"
-                            helper="If you set a custom domain, Coolify will validate the domain in your DNS provider."
+                            helper="If you set a custom domain, Zpanel will validate the domain in your DNS provider."
                             label="DNS Validation" />
                     </div>
 

@@ -1,6 +1,6 @@
 <div>
     <x-slot:title>
-        Proxy Configuration | Coolify
+        Proxy Configuration | Zpanel
     </x-slot>
     <livewire:server.navbar :server="$server" />
     @if ($server->isFunctional())

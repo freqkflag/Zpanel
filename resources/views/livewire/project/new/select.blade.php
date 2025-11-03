@@ -320,7 +320,7 @@
         <h2>Select a destination</h2>
         <div class="pb-4">Destinations are used to segregate resources by network. If you are unsure, select the
             default
-            Standalone Docker (coolify).</div>
+            Standalone Docker (zpanel).</div>
         <div class="flex flex-col justify-center gap-4 text-left xl:flex-row xl:flex-wrap">
             @if ($server->isSwarm())
                 @foreach ($swarmDockers as $swarmDocker)

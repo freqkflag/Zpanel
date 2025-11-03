@@ -366,7 +366,7 @@
                         id="is_container_label_escape_enabled" instantSave
                         x-bind:disabled="!canUpdate"></x-forms.checkbox>
                     {{-- <x-forms.checkbox label="Readonly labels"
-                        helper="Labels are readonly by default. Readonly means that edits you do to the labels could be lost and Coolify will autogenerate the labels for you. If you want to edit the labels directly, disable this option. <br><br>Be careful, it could break the proxy configuration after you restart the container as Coolify will now NOT autogenerate the labels for you (ofc you can always reset the labels to the coolify defaults manually)."
+                        helper="Labels are readonly by default. Readonly means that edits you do to the labels could be lost and Zpanel will autogenerate the labels for you. If you want to edit the labels directly, disable this option. <br><br>Be careful, it could break the proxy configuration after you restart the container as Zpanel will now NOT autogenerate the labels for you (ofc you can always reset the labels to the zpanel defaults manually)."
                         id="is_container_label_readonly_enabled" instantSave></x-forms.checkbox> --}}
                 </div>
             @endif
@@ -431,7 +431,7 @@
                 @endif
                 <div class="w-96">
                     <x-forms.checkbox label="Readonly labels"
-                        helper="Labels are readonly by default. Readonly means that edits you do to the labels could be lost and Coolify will autogenerate the labels for you. If you want to edit the labels directly, disable this option. <br><br>Be careful, it could break the proxy configuration after you restart the container as Coolify will now NOT autogenerate the labels for you (ofc you can always reset the labels to the coolify defaults manually)."
+                        helper="Labels are readonly by default. Readonly means that edits you do to the labels could be lost and Zpanel will autogenerate the labels for you. If you want to edit the labels directly, disable this option. <br><br>Be careful, it could break the proxy configuration after you restart the container as Zpanel will now NOT autogenerate the labels for you (ofc you can always reset the labels to the zpanel defaults manually)."
                         id="is_container_label_readonly_enabled" instantSave
                         x-bind:disabled="!canUpdate"></x-forms.checkbox>
                     <x-forms.checkbox label="Escape special characters in labels?"
@@ -440,11 +440,11 @@
                         x-bind:disabled="!canUpdate"></x-forms.checkbox>
                 </div>
                 @can('update', $application)
-                    <x-modal-confirmation title="Confirm Labels Reset to Coolify Defaults?"
+                    <x-modal-confirmation title="Confirm Labels Reset to Zpanel Defaults?"
                         buttonTitle="Reset Labels to Defaults" buttonFullWidth submitAction="resetDefaultLabels(true)"
                         :actions="[
                             'All your custom proxy labels will be lost.',
-                            'Proxy labels (traefik, caddy, etc) will be reset to the coolify defaults.',
+                            'Proxy labels (traefik, caddy, etc) will be reset to the zpanel defaults.',
                         ]" confirmationText="{{ $application->fqdn . '/' }}"
                         confirmationLabel="Please confirm the execution of the actions by entering the Application URL below"
                         shortConfirmationLabel="Application URL" :confirmWithPassword="false"
