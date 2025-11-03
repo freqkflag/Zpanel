@@ -1,6 +1,6 @@
 <div x-data x-init="@if ($server->hetzner_server_id && $server->cloudProviderToken && !$hetznerServerStatus) $wire.checkHetznerServerStatus() @endif">
     <x-slot:title>
-        {{ data_get_str($server, 'name')->limit(10) }} > General | Coolify
+        {{ data_get_str($server, 'name')->limit(10) }} > General | Zpanel
     </x-slot>
     <livewire:server.navbar :server="$server" />
     <div class="flex flex-col h-full gap-8 sm:flex-row">
@@ -95,7 +95,7 @@
                     @if ($server->id === 0)
                         <x-modal-confirmation title="Confirm Server Settings Change?" buttonTitle="Save"
                             submitAction="submit" :actions="[
-                                'If you misconfigure the server, you could lose a lot of functionalities of Coolify.',
+                                'If you misconfigure the server, you could lose a lot of functionalities of Zpanel.',
                             ]" :confirmWithText="false" :confirmWithPassword="false"
                             step2ButtonText="Save" canGate="update" :canResource="$server" />
                     @else
@@ -337,7 +337,7 @@
                                         <x-slot:title>Sentinel Logs</x-slot:title>
                                         <x-slot:content>
                                             <livewire:project.shared.get-logs :server="$server"
-                                                container="coolify-sentinel" displayName="Sentinel" lazy />
+                                                container="zpanel-sentinel" displayName="Sentinel" lazy />
                                         </x-slot:content>
                                         <x-forms.button @click="slideOverOpen=true"
                                             :disabled="$isValidating">Logs</x-forms.button>
@@ -353,7 +353,7 @@
                                         <x-slot:title>Sentinel Logs</x-slot:title>
                                         <x-slot:content>
                                             <livewire:project.shared.get-logs :server="$server"
-                                                container="coolify-sentinel" displayName="Sentinel" lazy />
+                                                container="zpanel-sentinel" displayName="Sentinel" lazy />
                                         </x-slot:content>
                                         <x-forms.button @click="slideOverOpen=true"
                                             :disabled="$isValidating">Logs</x-forms.button>
@@ -405,8 +405,8 @@
                             </div>
 
                             <x-forms.input canGate="update" :canResource="$server" id="sentinelCustomUrl" required
-                                label="Coolify URL"
-                                helper="URL to your Coolify instance. If it is empty that means you do not have a FQDN set for your Coolify instance."
+                                label="Zpanel URL"
+                                helper="URL to your Zpanel instance. If it is empty that means you do not have a FQDN set for your Zpanel instance."
                                 :disabled="$isValidating" />
 
                             <div class="flex flex-col gap-2">

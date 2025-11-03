@@ -39,8 +39,8 @@
                     @php
                         $proxyTitle =
                             $server->proxyType() === ProxyTypes::TRAEFIK->value
-                                ? 'Traefik (Coolify Proxy)'
-                                : 'Caddy (Coolify Proxy)';
+                                ? 'Traefik (Zpanel Proxy)'
+                                : 'Caddy (Zpanel Proxy)';
                     @endphp
                     @if ($server->proxyType() === ProxyTypes::TRAEFIK->value || $server->proxyType() === 'CADDY')
                         <div class="flex items-center gap-2">
