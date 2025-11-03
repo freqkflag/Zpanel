@@ -118,6 +118,26 @@ services:
       - dev_minio_data:/data
     networks:
       - coolify
+  code-server:
+    image: codercom/code-server:latest
+    pull_policy: always
+    container_name: coolify-code-server
+    ports:
+      - "${CODE_SERVER_PORT:-8080}:8080"
+    volumes:
+      - dev_ide_workspaces:/workspace
+      - dev_code_server_config:/home/coder/.config
+    environment:
+      - PASSWORD=${CODE_SERVER_PASSWORD:-}
+      - PROXY_DOMAIN=${CODE_SERVER_DOMAIN:-}
+    networks:
+      - coolify
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   dev_backups_data:
@@ -125,6 +145,8 @@ volumes:
   dev_redis_data:
   dev_coolify_data:
   dev_minio_data:
+  dev_ide_workspaces:
+  dev_code_server_config:
 
 networks:
   coolify:

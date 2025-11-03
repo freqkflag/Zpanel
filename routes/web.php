@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\IDEController;
 use App\Http\Controllers\OauthController;
 use App\Http\Controllers\UploadController;
 use App\Livewire\Admin\Index as AdminIndex;
@@ -143,6 +144,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/project/{project_uuid}', ProjectSharedVariablesShow::class)->name('shared-variables.project.show');
         Route::get('/environments', EnvironmentSharedVariablesIndex::class)->name('shared-variables.environment.index');
         Route::get('/environments/project/{project_uuid}/environment/{environment_uuid}', EnvironmentSharedVariablesShow::class)->name('shared-variables.environment.show');
+    });
+
+    Route::prefix('ide')->name('ide.')->group(function () {
+        Route::get('/', [IDEController::class, 'index'])->name('index');
+        Route::get('/workspaces', [IDEController::class, 'workspaces'])->name('workspaces');
+        Route::post('/workspaces', [IDEController::class, 'createWorkspace'])->name('workspaces.create');
+    });
+
+    Route::prefix('mcp')->name('mcp.')->group(function () {
+        Route::get('/', [App\Http\Controllers\MCPServerController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\MCPServerController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\MCPServerController::class, 'store'])->name('store');
+        Route::get('/{mcpServer}/edit', [App\Http\Controllers\MCPServerController::class, 'edit'])->name('edit');
+        Route::put('/{mcpServer}', [App\Http\Controllers\MCPServerController::class, 'update'])->name('update');
+        Route::delete('/{mcpServer}', [App\Http\Controllers\MCPServerController::class, 'destroy'])->name('destroy');
+        Route::get('/{mcpServer}/health', [App\Http\Controllers\MCPServerController::class, 'healthCheck'])->name('health');
+        Route::get('/config', [App\Http\Controllers\MCPServerController::class, 'config'])->name('config');
     });
 
     Route::prefix('team')->group(function () {
