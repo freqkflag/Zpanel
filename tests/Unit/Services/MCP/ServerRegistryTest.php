@@ -3,10 +3,16 @@
 use App\Models\MCPServer;
 use App\Services\MCP\ServerRegistry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
-uses(RefreshDatabase::class);
+uses(TestCase::class, RefreshDatabase::class);
 
 beforeEach(function () {
+    // Skip tests if SQLite driver is not available
+    if (! extension_loaded('pdo_sqlite')) {
+        $this->markTestSkipped('SQLite extension is required for these tests');
+    }
+
     $this->registry = app(ServerRegistry::class);
 });
 
@@ -24,7 +30,7 @@ test('can register new mcp server', function () {
 });
 
 test('can get server by name', function () {
-    MCPServer::factory()->create(['name' => 'my-server', 'status' => 'active']);
+    \App\Models\MCPServer::factory()->create(['name' => 'my-server', 'status' => 'active']);
 
     $server = $this->registry->getServer('my-server');
 
@@ -33,7 +39,7 @@ test('can get server by name', function () {
 });
 
 test('get server returns null for inactive server', function () {
-    MCPServer::factory()->create(['name' => 'inactive-server', 'status' => 'inactive']);
+    \App\Models\MCPServer::factory()->create(['name' => 'inactive-server', 'status' => 'inactive']);
 
     $server = $this->registry->getServer('inactive-server');
 
@@ -41,8 +47,8 @@ test('get server returns null for inactive server', function () {
 });
 
 test('lists only active servers', function () {
-    MCPServer::factory()->count(3)->create(['status' => 'active']);
-    MCPServer::factory()->count(2)->create(['status' => 'inactive']);
+    \App\Models\MCPServer::factory()->count(3)->create(['status' => 'active']);
+    \App\Models\MCPServer::factory()->count(2)->create(['status' => 'inactive']);
 
     $servers = $this->registry->listServers();
 
@@ -50,7 +56,7 @@ test('lists only active servers', function () {
 });
 
 test('can update server status', function () {
-    $server = MCPServer::factory()->create(['name' => 'test-server', 'status' => 'active']);
+    $server = \App\Models\MCPServer::factory()->create(['name' => 'test-server', 'status' => 'active']);
 
     $result = $this->registry->updateStatus('test-server', 'inactive');
 
@@ -66,7 +72,7 @@ test('update status returns false for non-existent server', function () {
 });
 
 test('health check updates last check timestamp', function () {
-    $server = MCPServer::factory()->create(['name' => 'test-server']);
+    $server = \App\Models\MCPServer::factory()->create(['name' => 'test-server']);
 
     $this->travel(1)->hour();
 
@@ -84,7 +90,7 @@ test('health check returns not found for missing server', function () {
 });
 
 test('generate config includes laravel boost', function () {
-    MCPServer::factory()->create(['name' => 'custom-server', 'status' => 'active']);
+    \App\Models\MCPServer::factory()->create(['name' => 'custom-server', 'status' => 'active']);
 
     $config = $this->registry->generateConfig();
 
@@ -94,8 +100,8 @@ test('generate config includes laravel boost', function () {
 });
 
 test('generate config excludes inactive servers', function () {
-    MCPServer::factory()->create(['name' => 'active-server', 'status' => 'active']);
-    MCPServer::factory()->create(['name' => 'inactive-server', 'status' => 'inactive']);
+    \App\Models\MCPServer::factory()->create(['name' => 'active-server', 'status' => 'active']);
+    \App\Models\MCPServer::factory()->create(['name' => 'inactive-server', 'status' => 'inactive']);
 
     $config = $this->registry->generateConfig();
 

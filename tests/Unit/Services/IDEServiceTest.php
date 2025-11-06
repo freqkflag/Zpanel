@@ -2,6 +2,9 @@
 
 use App\Services\IDEService;
 use Illuminate\Support\Facades\Cache;
+use Tests\TestCase;
+
+uses(TestCase::class);
 
 beforeEach(function () {
     config([

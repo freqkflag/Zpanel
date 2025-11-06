@@ -14,6 +14,8 @@ return [
 
     'kong_proxy_url' => env('KONG_PROXY_URL', 'http://kong:8000'),
 
+    'prometheus_url' => env('PROMETHEUS_URL', 'http://prometheus:9090'),
+
     'default_rate_limit' => env('KONG_DEFAULT_RATE_LIMIT', 1000),
 
     'rate_limit_window' => env('KONG_RATE_LIMIT_WINDOW', 3600), // 1 hour in seconds

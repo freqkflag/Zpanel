@@ -24,27 +24,29 @@ class ServiceAnalytics extends Component
         try {
             $kongService = app(KongService::class);
 
-            // Get service metrics from Kong
-            $kongServiceData = $kongService->getService($this->service->kong_service_id);
+            // Get service metrics from Prometheus or Kong metrics endpoint
+            $metrics = $kongService->getServiceMetrics(
+                $this->service->kong_service_id,
+                '24h'
+            );
 
-            // TODO: Implement actual metrics collection
-            // This would typically call Kong's metrics endpoint or Prometheus
+            // Format metrics for display
             $this->analytics = [
                 'requests' => [
-                    'total' => 0,
-                    'last_24h' => 0,
-                    'last_7d' => 0,
+                    'total' => (int) ($metrics['requests_total'] ?? 0),
+                    'last_24h' => (int) ($metrics['requests_24h'] ?? 0),
+                    'last_7d' => (int) ($metrics['requests_7d'] ?? 0),
                 ],
                 'response_time' => [
-                    'p50' => 0,
-                    'p95' => 0,
-                    'p99' => 0,
+                    'p50' => round($metrics['request_latency_p50'] ?? 0, 2),
+                    'p95' => round($metrics['request_latency_p95'] ?? 0, 2),
+                    'p99' => round($metrics['request_latency_p99'] ?? 0, 2),
                 ],
-                'error_rate' => 0,
+                'error_rate' => round($metrics['error_rate'] ?? 0, 2),
                 'status_codes' => [
-                    '2xx' => 0,
-                    '4xx' => 0,
-                    '5xx' => 0,
+                    '2xx' => (int) ($metrics['status_2xx'] ?? 0),
+                    '4xx' => (int) ($metrics['status_4xx'] ?? 0),
+                    '5xx' => (int) ($metrics['status_5xx'] ?? 0),
                 ],
             ];
 

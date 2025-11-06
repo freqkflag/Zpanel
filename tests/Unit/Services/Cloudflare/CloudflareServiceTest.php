@@ -2,6 +2,9 @@
 
 use App\Services\Cloudflare\CloudflareService;
 use Illuminate\Support\Facades\Http;
+use Tests\TestCase;
+
+uses(TestCase::class);
 
 beforeEach(function () {
     config([
@@ -24,7 +27,7 @@ test('cloudflare service makes get requests correctly', function () {
     $result = $this->service->get('zones');
 
     expect($result)->toBeArray();
-    expect($result['success'])->toBeTrue();
+    expect($result['zone_id'])->toBe('123');
 });
 
 test('cloudflare service makes post requests correctly', function () {
@@ -42,7 +45,7 @@ test('cloudflare service makes post requests correctly', function () {
     ]);
 
     expect($result)->toBeArray();
-    expect($result['success'])->toBeTrue();
+    expect($result['dns_record_id'])->toBe('456');
 });
 
 test('cloudflare service handles errors gracefully', function () {
@@ -54,17 +57,18 @@ test('cloudflare service handles errors gracefully', function () {
     ]);
 
     expect(fn () => $this->service->get('zones'))
-        ->toThrow(RuntimeException::class);
+        ->toThrow(\RuntimeException::class);
 });
 
 test('cloudflare service includes authorization header', function () {
-    Http::fake();
+    Http::fake([
+        'api.cloudflare.com/*' => Http::response([
+            'success' => true,
+            'result' => [],
+        ], 200),
+    ]);
 
-    try {
-        $this->service->get('zones');
-    } catch (\Exception $e) {
-        // Expected to fail with fake
-    }
+    $this->service->get('zones');
 
     Http::assertSent(function ($request) {
         return $request->hasHeader('Authorization', 'Bearer test-token');

@@ -73,20 +73,28 @@ class CloudflareService
 
         while ($attempt < $this->retryAttempts) {
             try {
-                $response = Http::withHeaders([
+                $http = Http::withHeaders([
                     'Authorization' => "Bearer {$this->apiToken}",
                     'Content-Type' => 'application/json',
-                ])
-                    ->timeout($this->timeout)
-                    ->when($method === 'GET', fn ($request) => $request->get($url, $params))
-                    ->when($method === 'POST', fn ($request) => $request->post($url, $data))
-                    ->when($method === 'PUT', fn ($request) => $request->put($url, $data))
-                    ->when($method === 'DELETE', fn ($request) => $request->delete($url));
+                ])->timeout($this->timeout);
+
+                $response = match ($method) {
+                    'GET' => $http->get($url, $params),
+                    'POST' => $http->post($url, $data),
+                    'PUT' => $http->put($url, $data),
+                    'DELETE' => $http->delete($url),
+                    default => throw new \InvalidArgumentException("Unsupported HTTP method: {$method}"),
+                };
 
                 if ($response->successful()) {
                     $body = $response->json();
 
-                    return $body['result'] ?? $body;
+                    // Return result if present, otherwise return full body
+                    if ($body === null) {
+                        return [];
+                    }
+
+                    return isset($body['result']) ? $body['result'] : $body;
                 }
 
                 // Handle rate limiting

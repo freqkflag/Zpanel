@@ -5,12 +5,15 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "lint": "eslint resources/js resources/css --ext .js,.vue",
+        "lint:fix": "eslint resources/js resources/css --ext .js,.vue --fix"
     },
     "devDependencies": {
         "@tailwindcss/postcss": "4.1.10",
         "@vitejs/plugin-vue": "5.2.4",
         "axios": "1.9.0",
+        "globals": "^16.5.0",
         "laravel-echo": "2.1.5",
         "laravel-vite-plugin": "1.3.0",
         "postcss": "8.5.5",
